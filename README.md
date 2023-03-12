@@ -1,6 +1,4 @@
 ## Start With Detectron2
-<br>
-
 ### For Windows
 <br>
 
