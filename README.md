@@ -7,7 +7,7 @@ Download and Install Anaconda
 Open Anaconda Prompt and create a new virtual environment by using the command:
 
 ```
-conda create -n detectron_env python=3.8
+conda create -n object_detect python=3.8
 ```
 
 Activate the environment:
