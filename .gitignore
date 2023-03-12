@@ -1,0 +1,5 @@
+detectron2
+build
+object_detection_panoptic.ipynb
+__pycache__
+.vscode
