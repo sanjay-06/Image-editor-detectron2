@@ -33,6 +33,7 @@ class ObjectDetection:
     
     def predict(self, image):
         self.predict_image(image)
+        panoptic_seg, segments_info = self.pred["panoptic_seg"]
         v = Visualizer(image[:, :, ::-1], MetadataCatalog.get(self.cfg.DATASETS.TRAIN[0]), scale=1.2)
         out = v.draw_panoptic_seg_predictions(panoptic_seg.to("cpu"), segments_info)
         visual = cv2.cvtColor(out.get_image()[:, :, ::-1], cv2.COLOR_BGR2RGB)
@@ -71,3 +72,15 @@ class ObjectDetection:
 
         composite = Image.composite(new_fg_image, background, new_alpha_mask)
         return np.array(composite)
+    
+    def blur_box(self, im):
+        self.predict_image(im)
+        x_min, x_max, y_min, y_max, item_mask = self.get_masks(6, self.pred)      
+        roi = im[y_min:y_max, x_min:x_max]
+        mask = np.zeros(im.shape[:2], dtype=np.uint8)
+        mask[y_min:y_max, x_min:x_max] = 255
+        mask_inv = cv2.bitwise_not(mask)
+        bg = cv2.bitwise_and(im, im, mask=mask_inv)
+        blurred_bg = cv2.GaussianBlur(bg, (51,51), 0)
+        blurred_bg[y_min:y_max, x_min:x_max] = roi
+        return blurred_bg

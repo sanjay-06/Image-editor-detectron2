@@ -88,6 +88,15 @@ def perform_clone(request: Request):
     cv2.imwrite(file_location, clone)
     return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
 
+@Image_editor.get('/blur_bg', response_class=HTMLResponse)
+def perform_clone(request: Request):
+    im = cv2.imread('html/'+upload_obj.img)
+    blur_box = obj.blur_box(im)
+    file_static_location = f"static/features/blur_box.jpg"
+    file_location = f"html/{file_static_location}"
+    cv2.imwrite(file_location, blur_box)
+    return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
+
 @Image_editor.post('/upload_file')
 async def handle_image(upload_file:UploadFile = File(...)):
     filename=upload_file.filename
