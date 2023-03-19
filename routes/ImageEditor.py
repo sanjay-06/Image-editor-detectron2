@@ -79,6 +79,15 @@ def perform_sepia(request: Request):
     cv2.imwrite(file_location, vintage)
     return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
 
+@Image_editor.get('/clone', response_class=HTMLResponse)
+def perform_clone(request: Request):
+    im = cv2.imread('html/'+upload_obj.img)
+    clone = obj.clone(im)
+    file_static_location = f"static/features/clone.jpg"
+    file_location = f"html/{file_static_location}"
+    cv2.imwrite(file_location, clone)
+    return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
+
 @Image_editor.post('/upload_file')
 async def handle_image(upload_file:UploadFile = File(...)):
     filename=upload_file.filename
