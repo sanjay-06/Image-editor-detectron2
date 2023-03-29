@@ -10,7 +10,7 @@
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 
 
-    <title>Tailwind CSS CDN</title>
+    <title>Image Editor</title>
   </head>
 
    <!-- JavaScript to handle showing and hiding the tooltip -->
@@ -26,8 +26,8 @@
     //   tooltip.classList.add('hidden')
     // })
 
-    function call() {
-      const tooltip = document.querySelector('.tooltip')
+    function call1() {
+      const tooltip = document.querySelector('.tooltip1')
       console.log(tooltip.classList)
       if(!tooltip.classList.contains('hidden')) {
         tooltip.classList.add('hidden')
@@ -36,6 +36,29 @@
         tooltip.classList.remove('hidden')
       }
     }
+
+    function call2() {
+      const tooltip = document.querySelector('.tooltip2')
+      console.log(tooltip.classList)
+      if(!tooltip.classList.contains('hidden')) {
+        tooltip.classList.add('hidden')
+      }
+      else {
+        tooltip.classList.remove('hidden')
+      }
+    }
+
+    function call3() {
+      const tooltip = document.querySelector('.tooltip3')
+      console.log(tooltip.classList)
+      if(!tooltip.classList.contains('hidden')) {
+        tooltip.classList.add('hidden')
+      }
+      else {
+        tooltip.classList.remove('hidden')
+      }
+    }
+
   </script>
   <body>
 
@@ -117,29 +140,79 @@
                         Harris
                     </button>
                   </a>
-                </div>          
-
+                </div>    
+                
                 <div class="row-span-2 p-4 flex justify-center items-center">
-                  <a href="/clone">
-                    <button class="py-2 px-6 bg-blue-500 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700">
-                        Clone
+                  <!-- <a href="/blur_bg"> -->
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="button" onclick="call3()">
+                      View Mask
                     </button>
-                  </a>
-                </div>          
+                  <!-- </a> -->
+                </div>        
+                <div class="relative">
+                  <!-- Tooltip content -->
+                  <div class="tooltip3 absolute bg-white rounded-lg shadow-lg p-4 hidden">
+                    <h2 class="text-lg font-bold mb-4">Select Mask</h2>
+                
+                    <form action="/get_roi" method="post" name="s">
+                      <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="inputField">
+                          Mask Index
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="inputField" type="text" placeholder="Enter value" name="index">
+                      </div>
+                
+                      <div class="flex justify-end">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                          Submit
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>   
 
                 <div class="row-span-2 p-4 flex justify-center items-center">
                   <!-- <a href="/blur_bg"> -->
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="button" onclick="call()">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="button" onclick="call1()">
+                      Clone
+                    </button>
+                  <!-- </a> -->
+                </div>        
+                <div class="relative">
+                  <!-- Tooltip content -->
+                  <div class="tooltip1 absolute bg-white rounded-lg shadow-lg p-4 hidden">
+                    <h2 class="text-lg font-bold mb-4">Select Mask</h2>
+                
+                    <form action="/clone" method="post" name="l">
+                      <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="inputField">
+                          Mask Index
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="inputField" type="text" placeholder="Enter value" name="index">
+                      </div>
+                
+                      <div class="flex justify-end">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                          Submit
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>        
+
+                <div class="row-span-2 p-4 flex justify-center items-center">
+                  <!-- <a href="/blur_bg"> -->
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="button" onclick="call2()">
                       Blur Bg
                     </button>
                   <!-- </a> -->
                 </div>        
                 <div class="relative">
                   <!-- Tooltip content -->
-                  <div class="tooltip absolute bg-white rounded-lg shadow-lg p-4 hidden">
+                  <div class="tooltip2 absolute bg-white rounded-lg shadow-lg p-4 hidden">
                     <h2 class="text-lg font-bold mb-4">Select Mask</h2>
                 
-                    <form action="/blur_bg" method="post">
+                    <form action="/blur_bg" method="post" name="s">
                       <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="inputField">
                           Mask Index

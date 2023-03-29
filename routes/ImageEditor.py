@@ -79,10 +79,10 @@ def perform_sepia(request: Request):
     cv2.imwrite(file_location, vintage)
     return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
 
-@Image_editor.get('/clone', response_class=HTMLResponse)
-def perform_clone(request: Request):
+@Image_editor.post('/clone', response_class=HTMLResponse)
+def perform_clone(request: Request, index:str=Form(...)):
     im = cv2.imread('html/'+upload_obj.img)
-    clone = obj.clone(im)
+    clone = obj.clone(im, item_mask_index=int(index))
     file_static_location = f"static/features/clone.jpg"
     file_location = f"html/{file_static_location}"
     cv2.imwrite(file_location, clone)
@@ -106,15 +106,14 @@ def perform_bg(request: Request, index:str=Form(...)):
     cv2.imwrite(file_location, blur_bg)
     return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
 
-# @Image_editor.post('/get_roi', response_class=HTMLResponse)
-# def perform_bg(request: Request, index:str=Form(...)):
-#     print('hiiiiiiiiiiiiiiiiiiiiiii', index)
-#     im = cv2.imread('html/'+upload_obj.img)
-#     roi = obj.get_idx(im, index)
-#     file_static_location = f"static/features/roi.jpg"
-#     file_location = f"html/{file_static_location}"
-#     cv2.imwrite(file_location, roi)
-#     return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
+@Image_editor.post('/get_roi', response_class=HTMLResponse)
+def perform_bg(request: Request, index:str=Form(...)):
+    im = cv2.imread('html/'+upload_obj.img)
+    roi = obj.get_idx(im, index)
+    file_static_location = f"static/features/roi.jpg"
+    file_location = f"html/{file_static_location}"
+    cv2.imwrite(file_location, roi)
+    return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
 
 @Image_editor.post('/upload_file')
 async def handle_image(upload_file:UploadFile = File(...)):
