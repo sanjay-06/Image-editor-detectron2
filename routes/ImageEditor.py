@@ -4,7 +4,7 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.responses import FileResponse
-from fastapi import File, UploadFile
+from fastapi import File, UploadFile, Form
 from features.object_detection import ObjectDetection
 from features.filtering import Filter
 from features.Upload import Upload
@@ -88,14 +88,33 @@ def perform_clone(request: Request):
     cv2.imwrite(file_location, clone)
     return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
 
-@Image_editor.get('/blur_bg', response_class=HTMLResponse)
-def perform_clone(request: Request):
+@Image_editor.get('/blur_box', response_class=HTMLResponse)
+def perform_box(request: Request):
     im = cv2.imread('html/'+upload_obj.img)
     blur_box = obj.blur_box(im)
     file_static_location = f"static/features/blur_box.jpg"
     file_location = f"html/{file_static_location}"
     cv2.imwrite(file_location, blur_box)
     return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
+
+@Image_editor.post('/blur_bg', response_class=HTMLResponse)
+def perform_bg(request: Request, index:str=Form(...)):
+    im = cv2.imread('html/'+upload_obj.img)
+    blur_bg = obj.blur_bg(im, index)
+    file_static_location = f"static/features/blur_bg.jpg"
+    file_location = f"html/{file_static_location}"
+    cv2.imwrite(file_location, blur_bg)
+    return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
+
+# @Image_editor.post('/get_roi', response_class=HTMLResponse)
+# def perform_bg(request: Request, index:str=Form(...)):
+#     print('hiiiiiiiiiiiiiiiiiiiiiii', index)
+#     im = cv2.imread('html/'+upload_obj.img)
+#     roi = obj.get_idx(im, index)
+#     file_static_location = f"static/features/roi.jpg"
+#     file_location = f"html/{file_static_location}"
+#     cv2.imwrite(file_location, roi)
+#     return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
 
 @Image_editor.post('/upload_file')
 async def handle_image(upload_file:UploadFile = File(...)):

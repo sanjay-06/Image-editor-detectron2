@@ -12,6 +12,31 @@
 
     <title>Tailwind CSS CDN</title>
   </head>
+
+   <!-- JavaScript to handle showing and hiding the tooltip -->
+   <script>
+    // const tooltipTrigger = document.querySelector('.tooltip-trigger')
+    // const tooltip = document.querySelector('.tooltip')
+  
+    // tooltipTrigger.addEventListener('mouseover', () => {
+    //   tooltip.classList.remove('hidden')
+    // })
+  
+    // tooltipTrigger.addEventListener('mouseout', () => {
+    //   tooltip.classList.add('hidden')
+    // })
+
+    function call() {
+      const tooltip = document.querySelector('.tooltip')
+      console.log(tooltip.classList)
+      if(!tooltip.classList.contains('hidden')) {
+        tooltip.classList.add('hidden')
+      }
+      else {
+        tooltip.classList.remove('hidden')
+      }
+    }
+  </script>
   <body>
 
     <nav class="bg-gray-800">
@@ -47,9 +72,10 @@
             <div class="row-span-2 p-4 flex justify-center items-center">
                 <img src={{detect}} class="w-3/4" alt="Image description">
             </div>
-            <h1>{{detect}}</h1>
             {% endif %}
         </div>
+        
+        
         <div class="flex justify-center items-center col-span-1 overflow-y-scroll bg-gray-200">
           <!-- Long container on the right side of the page -->
           <div class="col-span-3">
@@ -102,16 +128,35 @@
                 </div>          
 
                 <div class="row-span-2 p-4 flex justify-center items-center">
-                  <a href="/blur_bg">
-                    <button class="py-2 px-6 bg-blue-500 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700">
-                        Blur Box
+                  <!-- <a href="/blur_bg"> -->
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="button" onclick="call()">
+                      Blur Bg
                     </button>
-                  </a>
-                </div>          
+                  <!-- </a> -->
+                </div>        
+                <div class="relative">
+                  <!-- Tooltip content -->
+                  <div class="tooltip absolute bg-white rounded-lg shadow-lg p-4 hidden">
+                    <h2 class="text-lg font-bold mb-4">Select Mask</h2>
+                
+                    <form action="/blur_bg" method="post">
+                      <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="inputField">
+                          Mask Index
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="inputField" type="text" placeholder="Enter value" name="index">
+                      </div>
+                
+                      <div class="flex justify-end">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                          Submit
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>   
           </div>
-          
         </div>
       </div>
-
   </body>
 </html>

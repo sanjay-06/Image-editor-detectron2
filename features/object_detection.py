@@ -84,3 +84,21 @@ class ObjectDetection:
         blurred_bg = cv2.GaussianBlur(bg, (51,51), 0)
         blurred_bg[y_min:y_max, x_min:x_max] = roi
         return blurred_bg
+    
+    def get_idx(self, im, mask_idx=0):
+        self.predict_image(im)
+        x_min, x_max, y_min, y_max, item_mask = self.get_masks(int(mask_idx), self.pred)
+        return im[y_min:y_max, x_min:x_max]
+    
+    def blur_bg(self, im, mask_idx=0):
+        self.predict_image(im)
+        x_min, x_max, y_min, y_max, item_mask = self.get_masks(int(mask_idx), self.pred)
+        mask = Image.fromarray((item_mask * 255).astype('uint8'))
+        cropped_mask = mask.crop((x_min, y_min, x_max, y_max))
+        blurred_image = cv2.GaussianBlur(im, (21,21), 0)
+        _, binary_mask = cv2.threshold(np.array(mask), 128, 255, cv2.THRESH_BINARY)
+        mask_inv = cv2.bitwise_not(binary_mask)
+        masked_image = cv2.bitwise_and(blurred_image, blurred_image, mask=mask_inv)
+        result = cv2.bitwise_or(im, im, mask=binary_mask)
+        blended_image = cv2.bitwise_or(np.array(result), masked_image)
+        return blended_image
