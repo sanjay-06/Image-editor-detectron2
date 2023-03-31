@@ -61,7 +61,7 @@ class ObjectDetection:
         return new_fg_image, new_alpha_mask
 
     def clone(self, item_mask_index=6, paste_position = (0, 300)):
-        x_min, x_max, y_min, y_max, item_mask = self.get_masks(item_mask_index, self.pred)
+        x_min, x_max, y_min, y_max, item_mask = self.get_masks(int(item_mask_index), self.pred)
         cropped = self.crop(self.image_name, x_min, x_max, y_min, y_max)
         mask = Image.fromarray((item_mask * 255).astype('uint8'))
 
@@ -82,6 +82,20 @@ class ObjectDetection:
         blurred_bg = cv2.GaussianBlur(bg, (51,51), 0)
         blurred_bg[y_min:y_max, x_min:x_max] = roi
         return blurred_bg
+    
+    def change_bg_image(self, image_file, item_mask_index=0):
+        x_min, x_max, y_min, y_max, item_mask = self.get_masks(int(item_mask_index), self.pred)
+        mask = Image.fromarray((item_mask * 255).astype('uint8'))
+        cropped_mask = mask.crop((x_min, y_min, x_max, y_max))
+        _, binary_mask = cv2.threshold(np.array(mask), 128, 255, cv2.THRESH_BINARY)
+        inverted_mask = binary_mask
+        mask_inv = cv2.bitwise_not(binary_mask)
+        image_file = cv2.resize(image_file, (mask_inv.shape[1], mask_inv.shape[0]))
+        masked_image = cv2.bitwise_and(image_file, image_file, mask=mask_inv)
+        result = cv2.bitwise_or(self.image_name, self.image_name, mask=inverted_mask)
+        image_file = cv2.resize(image_file, (result.shape[1], result.shape[0]))
+        blended_image = cv2.bitwise_or(result, masked_image)
+        return blended_image
     
     def get_idx(self, mask_idx=0):
         x_min, x_max, y_min, y_max, item_mask = self.get_masks(int(mask_idx), self.pred)

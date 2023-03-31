@@ -101,6 +101,19 @@ def perform_bg(request: Request, index:str=Form(...)):
     cv2.imwrite(file_location, blur_bg)
     return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
 
+@Image_editor.post('/change_bg', response_class=HTMLResponse)
+def perform_change_bg(request: Request, index:str=Form(...), image_file: UploadFile = File(...)):
+    im = cv2.imread('html/'+upload_obj.img)
+    with open('html/static/input/bg.jpg', "wb") as buffer:
+        shutil.copyfileobj(image_file.file, buffer)
+    bg = cv2.imread('html/static/input/bg.jpg')
+    resized_bg = cv2.resize(bg, (600, 600))
+    change_bg_file = upload_obj.obj.change_bg_image(resized_bg, index)
+    file_static_location = f"static/features/change_bg_file.jpg"
+    file_location = f"html/{file_static_location}"
+    cv2.imwrite(file_location, change_bg_file)
+    return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
+
 @Image_editor.post('/get_roi', response_class=HTMLResponse)
 def perform_bg(request: Request, index:str=Form(...)):
     im = cv2.imread('html/'+upload_obj.img)
