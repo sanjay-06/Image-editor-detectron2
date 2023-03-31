@@ -5,17 +5,15 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.responses import FileResponse
 from fastapi import File, UploadFile, Form
-from features.object_detection import ObjectDetection
 from features.filtering import Filter
-from features.Upload import Upload
+from features.Upload import UploadObj
 from features.feature_detection import Feature
 
 Image_editor=APIRouter()
 templates=Jinja2Templates(directory="html")
 
-obj = ObjectDetection()
 filtering = Filter()
-upload_obj = Upload()
+upload_obj = UploadObj()
 feature_obj = Feature()
 
 @Image_editor.get('/')
@@ -24,9 +22,7 @@ def load_page(request : Request):
 
 @Image_editor.get('/detect', response_class=HTMLResponse)
 def detect_image(request: Request):
-    im = cv2.imread('html/'+upload_obj.img)
-    img = cv2.cvtColor(im, cv2.COLOR_BGR2RGB) 
-    visual = obj.predict(img)
+    visual = upload_obj.obj.predict()
     file_static_location = f"static/features/detect.jpg"
     file_location = f"html/static/features/detect.jpg"
     cv2.imwrite(file_location, visual)
@@ -81,17 +77,16 @@ def perform_sepia(request: Request):
 
 @Image_editor.post('/clone', response_class=HTMLResponse)
 def perform_clone(request: Request, index:str=Form(...)):
-    im = cv2.imread('html/'+upload_obj.img)
-    clone = obj.clone(im, item_mask_index=int(index))
+    clone = upload_obj.obj.clone(item_mask_index=int(index))
     file_static_location = f"static/features/clone.jpg"
     file_location = f"html/{file_static_location}"
     cv2.imwrite(file_location, clone)
     return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
 
-@Image_editor.get('/blur_box', response_class=HTMLResponse)
-def perform_box(request: Request):
+@Image_editor.post('/blur_box', response_class=HTMLResponse)
+def perform_box(request: Request, index:str=Form(...)):
     im = cv2.imread('html/'+upload_obj.img)
-    blur_box = obj.blur_box(im)
+    blur_box = upload_obj.obj.blur_box(index)
     file_static_location = f"static/features/blur_box.jpg"
     file_location = f"html/{file_static_location}"
     cv2.imwrite(file_location, blur_box)
@@ -100,16 +95,29 @@ def perform_box(request: Request):
 @Image_editor.post('/blur_bg', response_class=HTMLResponse)
 def perform_bg(request: Request, index:str=Form(...)):
     im = cv2.imread('html/'+upload_obj.img)
-    blur_bg = obj.blur_bg(im, index)
+    blur_bg = upload_obj.obj.blur_bg(index)
     file_static_location = f"static/features/blur_bg.jpg"
     file_location = f"html/{file_static_location}"
     cv2.imwrite(file_location, blur_bg)
     return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
 
+@Image_editor.post('/change_bg', response_class=HTMLResponse)
+def perform_change_bg(request: Request, index:str=Form(...), image_file: UploadFile = File(...)):
+    im = cv2.imread('html/'+upload_obj.img)
+    with open('html/static/input/bg.jpg', "wb") as buffer:
+        shutil.copyfileobj(image_file.file, buffer)
+    bg = cv2.imread('html/static/input/bg.jpg')
+    resized_bg = cv2.resize(bg, (600, 600))
+    change_bg_file = upload_obj.obj.change_bg_image(resized_bg, index)
+    file_static_location = f"static/features/change_bg_file.jpg"
+    file_location = f"html/{file_static_location}"
+    cv2.imwrite(file_location, change_bg_file)
+    return templates.TemplateResponse("show.html",{"request":request, "image": upload_obj.img, "detect": file_static_location})
+
 @Image_editor.post('/get_roi', response_class=HTMLResponse)
 def perform_bg(request: Request, index:str=Form(...)):
     im = cv2.imread('html/'+upload_obj.img)
-    roi = obj.get_idx(im, index)
+    roi = upload_obj.obj.get_idx(index)
     file_static_location = f"static/features/roi.jpg"
     file_location = f"html/{file_static_location}"
     cv2.imwrite(file_location, roi)
@@ -123,8 +131,9 @@ async def handle_image(upload_file:UploadFile = File(...)):
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(upload_file.file, buffer)
     
-    # obj.image_name = file_static_location
+    # upload_obj.obj.image_name = file_static_location
     upload_obj.set_image(file_static_location)
+    obj = upload_obj.set_object()
 
     return {"message":"success","statuscode":200}
 
