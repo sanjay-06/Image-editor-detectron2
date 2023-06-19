@@ -39,3 +39,73 @@ Then install OpenCV:
 ```
 pip install opencv-python
 ```
+
+# Features
+
+## Upload Image Here
+<br>
+
+![upload](images/output/upload.JPG)
+
+## Editor
+<br>
+
+![display](images/output/editor.jpg)
+
+## Object Detection using detectron2
+<br>
+
+![display](images/output/object_detect.png)
+
+## select Interest mask
+<br>
+
+![display](images/output/get_roi.png)
+
+## Clone
+<br>
+
+![display](images/output/clone.png)
+
+
+
+## Blur Background
+<br>
+
+![display](images/output/blur_bg.png)
+
+<br>
+
+![display](images/output/blur_box.png)
+
+## Change Background
+<br>
+
+![display](images/output/change_bg.png)
+
+## SIFT
+<br>
+
+![display](images/output/sift.png)
+
+## HARRIS
+<br>
+
+![display](images/output/harris.png)
+
+## Sepia
+<br>
+
+![display](images/output/sepia.png)
+
+## Vintage
+<br>
+
+![display](images/output/vintage.png)
+
+<br>
+
+```
+Frontend => Tailwindcss, HTML
+Backend  => FastAPI
+Model    => detectron2
