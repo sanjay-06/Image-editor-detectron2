@@ -109,3 +109,4 @@ pip install opencv-python
 Frontend => Tailwindcss, HTML
 Backend  => FastAPI
 Model    => detectron2
+```
