@@ -45,7 +45,7 @@ pip install opencv-python
 ## Upload Image Here
 <br>
 
-![upload](images/output/upload.jpg)
+![upload](images/output/upload.jpg?raw=true)
 
 ## Editor
 <br>
