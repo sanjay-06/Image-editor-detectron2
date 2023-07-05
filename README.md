@@ -45,7 +45,7 @@ pip install opencv-python
 ## Upload Image Here
 <br>
 
-![upload](images/output/upload.jpg?raw=true)
+![upload](https://raw.githubusercontent.com/sanjay-06/Image-editor-detectron2/master/images/output/upload.jpg)
 
 ## Editor
 <br>
